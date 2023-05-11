@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <form action="" id="form">
+        <h4>Email</h4>
+        <input type="text" name="email" id="email" placeholder="email" required />
+        <p style="color: red;" id="errorEmail"></p>
+
+        <h4>UserName</h4>
+        <input type="text" name="username" id="username" placeholder="username" required />
+        <p style="color: red;" id="errorUsername"></p>
+        <h4>Password</h4>
+        <input type="text" name="password" id="password" placeholder="password" required />
+        <p style="color: red;" id="errorPassword"></p>
+
+        <h4>Sex</h4>
+        <input name="sex" id="male" type="radio" checked /><label for="">Male</label>
+        <input name="sex" id="female" type="radio" /><label for="">Female</label>
+        <p style="color: red;" id="errorSex"></p>
+
+        <h4>Dob</h4>
+        <input type="date" name="dOB" id="dOB" required />
+        <p style="color: red;" id="errordOB"></p>
+
+        <button type="submit" disabled class="btn_disable" id="button-submit">REGISTER</button>
+    </form>
+</body>
+<script>
+    const nameEle = document.getElementById('username');
+    const nameValue = nameEle.value;
+
+
+    const emailEle = document.getElementById('email');
+    const emailValue = emailEle.value;
+
+    const passwordEle = document.getElementById('password');
+    const passwordValue = passwordEle.value
+
+    const dOBEle = document.getElementById('dOB');
+    const dOBValue = dOB.value;
+
+    const buttonEle = document.getElementById('button-submit');
+    const buttonValue = buttonEle.value;
+
+    const maleEle = document.getElementById('male');
+    const femaleEle = document.getElementById('female');
+
+    const formEle = document.getElementById('form');
+    formEle.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+    });
+
+    const errorList = {
+        email: null,
+        username: null,
+        password: null,
+        sex: null,
+        dOB: null,
+    };
+
+    nameEle.addEventListener('keyup', () => {
+        const regExUsername = /^[a-zA-Z0-9_]+$/;
+        const p = document.getElementById('errorUsername');
+        if (!nameEle.value) {
+            p.innerText = 'Ten khong duoc de trong';
+            errorList.username = "Ten khong duoc de trong";
+
+        }
+        else if (typeof nameEle.value !== "string") {
+            p.innerText = 'username phai la chuoi';
+            errorList.username = "username phai la chuoi";
+        }
+        else if (!regExUsername.test(nameEle.value)) {
+            p.innerText = 'username khong duoc chua ky tu dac biet';
+            errorList.username = "username khong duoc nho hon 6 ky tu";
+        }
+        else if (nameEle.value && nameEle.value.length < 6) {
+            p.innerText = 'username khong duoc nho hon 6 ky tu';
+            errorList.username = "username khong duoc nho hon 6 ky tu";
+
+        }
+        else {
+            p.innerText = "";
+            errorList.username = null;
+        }
+
+
+        checkError();
+    });
+
+    emailEle.addEventListener('keyup', () => {
+        const regExEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const p = document.getElementById('errorEmail');
+        if (!emailEle.value) {
+            p.innerText = 'Email khong duoc de trong';
+            errorList.email = "Email khong duoc de trong";
+
+        }
+        else if (!regExEmail.test(emailEle.value)) {
+            p.innerText = 'Email phai dung dinh dang';
+            errorList.email = "Email phai dung dinh dang";
+        }
+        else {
+            p.innerText = "";
+            errorList.email = null;
+        }
+
+        checkError();
+    });
+
+    passwordEle.addEventListener('keyup', () => {
+        const p = document.getElementById('errorPassword');
+        if (!passwordEle.value) {
+            p.innerText = 'Pass khong duoc de trong';
+            errorList.password = "Pass khong duoc de trong";
+
+        }
+        else if (passwordEle.value.length < 8) {
+            p.innerText = 'Pass phai co do dai lon hon hoac bang 8 ky tu';
+            errorList.password = "Pass phai co do dai lon hon hoac bang 8 ky tu";
+        }
+        else {
+            p.innerText = "";
+            errorList.password = null;
+        }
+
+        checkError();
+    });
+
+    dOBEle.addEventListener('change', () => {
+        const dOBCheck = new Date(dOBEle.value).getTime();
+        const maxdOB = new Date().getTime();
+        const defaultDOB = dOBEle.defaultDOB;
+        const p = document.getElementById('errordOB');
+        if (dOBEle.value === defaultDOB) {
+            p.innerText = 'ngay sinh khong duoc de trong';
+            errorList.dOB = "ngay sinh khong duoc de trong";
+
+        }
+        else if (dOBCheck > maxdOB) {
+            p.innerText = 'ngay sinh khong duoc lon hon thoi gian hien tai';
+            errorList.dOB = "ngay sinh khong duoc lon hon thoi gian hien tai";
+        }
+        else {
+            p.innerText = "";
+            errorList.dOB = null;
+        }
+        checkError();
+
+    });
+
+
+    // const checkError = () => {
+    //     if (errorList.username || errorList.password || errorList.sex || errorList.dOB || errorList.email) {
+    //         buttonEle.classList.add('btn_disable');
+    //         buttonEle.classList.remove('btn_active');
+    //         buttonEle.setAttribute('disabled', 'true');
+    //     } else {
+    //         buttonEle.classList.add('btn_active');
+    //         buttonEle.classList.remove('btn_disable');
+    //         buttonEle.removeAttribute('disabled');
+    //     }
+    // }
+
+    const checkError = () => {
+        let errorMessage = "";
+        const buttonEle = document.getElementById('button-submit');
+        const maleEle = document.querySelector('input[name="sex"]').checked;
+        const femaleEle = document.querySelector('input[name="sex"]').checked;
+        if (
+            (nameEle.value || "").trim() === "" ||
+            (passwordEle.value || "").trim() === "" ||
+            (emailEle.value || "").trim() === "" ||
+            (!maleEle && !femaleEle) ||
+            (dOBEle.value || "").trim() === ""
+        ) {
+            errorMessage += "Please enter your information before submitting.\n";
+        } else if (
+            errorList.email ||
+            errorList.dOB ||
+            errorList.sex ||
+            errorList.username ||
+            errorList.password
+        ) {
+            // rest of the function remains unchanged
+        } else {
+            buttonEle.classList.add('btn_active');
+            buttonEle.classList.remove('btn_disable');
+            buttonEle.removeAttribute('disabled');
+        }
+
+        if (errorMessage) {
+            buttonEle.classList.add('btn_disable');
+            buttonEle.classList.remove('btn_active');
+            buttonEle.setAttribute('disabled', 'true');
+        }
+
+    }
+    buttonEle.addEventListener('click', (event) => {
+        const username = nameEle.value;
+        const password = passwordEle.value;
+        const email = emailEle.value;
+        const dOB = new Date(dOBEle.value).getTime();
+        const male = maleEle.checked;
+        const female = femaleEle.checked;
+        const sex = !male ? 'female' : 'male';
+
+        // if (
+        //     (username || "").trim() === "" ||
+        //     (password || "").trim() === "" ||
+        //     (email || "").trim() === "" ||
+        //     (!male && !female) ||
+        //     (dOBEle.value || "").trim() === ""
+        // ) {
+        //     // Hiển thị thông báo lỗi
+        //     alert("Vui lòng nhập đủ thông tin trước khi đăng ký.");
+        //     // Ngăn chặn hành động mặc định của nút submit
+        //     event.preventDefault();
+        //     // buttonEle.setAttribute('disabled', 'true');
+        // }
+        console.log(username, password, email, dOB, sex);
+        async function postJSON(data) {
+            const buttonELe = document.getElementById('button-submit');
+            buttonELe.innerText = "Loading...";
+            buttonEle.setAttribute('disabled', 'true');
+            try {
+                const response = await fetch(
+                    "http://3.95.239.60:9001/api/auth/sign-in",
+                    {
+                        method: "POST", // or 'PUT'
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(data),
+                    }
+                );
+                const result = await response.json();
+                console.log("Success:", result);
+                if (result.success === false) {
+                    alert(result.message);
+                }
+                buttonELe.innerText = "OK";
+
+                setTimeout(() => {
+                    window.location.assign("http://127.0.0.1:5501/es6/login.html")
+                }, 2000);
+
+
+            } catch (error) {
+                console.error("Error:", error);
+            }
+            finally {
+                // buttonELe.disabled = false;
+            }
+        }
+
+
+        postJSON({ username, dOB, sex, email, password });
+    })
+</script>
+
+</html>
